@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose --provider openshift convert --file /home/ec2-user/workspace/galaxy/scripts/docker/release/compose.yml
+      --replicas 1 --volumes persistentVolumeClaim
+    kompose.version: 1.19.0 (f63a961c)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: galaxy-celery-beat
+  name: galaxy-celery-beat
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: galaxy-celery-beat
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: galaxy-celery-beat
+    spec:
+      containers:
+      - args:
+        - run
+        - celery-beat
+        env:
+        - name: C_FORCE_ROOT
+          value: "1"
+        - name: GALAXY_AWS_ACCESS_KEY_ID
+          value: asdfghjkl
+        - name: GALAXY_AWS_SECRET_ACCESS_KEY
+          value: asdfghjkl
+        - name: GALAXY_AWS_STORAGE_BUCKET_NAME
+          value: ocp-4.2.0
+        - name: GALAXY_DB_URL
+          value: postgres://galaxy:galaxy@postgres:5432/galaxy
+        - name: GALAXY_RABBITMQ_HOST
+          value: rabbitmq
+        - name: GALAXY_RABBITMQ_PASSWORD
+          value: galaxy
+        - name: GALAXY_SECRET_KEY
+          value: secret
+        image: ' '
+        name: galaxy-celery-beat
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - galaxy-celery-beat
+      from:
+        kind: ImageStreamTag
+        name: galaxy-celery-beat:latest
+    type: ImageChange
+status: {}

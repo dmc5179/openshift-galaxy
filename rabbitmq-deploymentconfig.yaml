@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose --provider openshift convert --file /home/ec2-user/workspace/galaxy/scripts/docker/release/compose.yml
+      --replicas 1 --volumes persistentVolumeClaim
+    kompose.version: 1.19.0 (f63a961c)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rabbitmq
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: rabbitmq
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rabbitmq
+    spec:
+      containers:
+      - env:
+        - name: RABBITMQ_DEFAULT_PASS
+          value: galaxy
+        - name: RABBITMQ_DEFAULT_USER
+          value: galaxy
+        - name: RABBITMQ_DEFAULT_VHOST
+          value: galaxy
+        image: ' '
+        name: rabbitmq
+        ports:
+        - containerPort: 5672
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - rabbitmq
+      from:
+        kind: ImageStreamTag
+        name: rabbitmq:latest
+    type: ImageChange
+status: {}

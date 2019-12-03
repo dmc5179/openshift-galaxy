@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose --provider openshift convert --file /home/ec2-user/workspace/galaxy/scripts/docker/release/compose.yml
+      --replicas 1 --volumes persistentVolumeClaim
+    kompose.version: 1.19.0 (f63a961c)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: galaxy-ui
+  name: galaxy-ui
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: galaxy-ui
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: galaxy-ui
+    spec:
+      containers:
+      - image: ' '
+        name: galaxy-ui
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - galaxy-ui
+      from:
+        kind: ImageStreamTag
+        name: galaxy-ui:latest
+    type: ImageChange
+status: {}

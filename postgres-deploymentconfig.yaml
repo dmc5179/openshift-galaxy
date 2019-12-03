@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose --provider openshift convert --file /home/ec2-user/workspace/galaxy/scripts/docker/release/compose.yml
+      --replicas 1 --volumes persistentVolumeClaim
+    kompose.version: 1.19.0 (f63a961c)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: postgres
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: postgres
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: postgres
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: galaxy
+        - name: POSTGRES_PASSWORD
+          value: galaxy
+        - name: POSTGRES_USER
+          value: galaxy
+        image: ' '
+        name: postgres
+        ports:
+        - containerPort: 5432
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - postgres
+      from:
+        kind: ImageStreamTag
+        name: postgres:9.5
+    type: ImageChange
+status: {}
