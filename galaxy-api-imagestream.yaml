@@ -10,7 +10,7 @@ spec:
   - annotations: null
     from:
       kind: DockerImage
-      name: quay.io/danclark/galaxy:latest
+      name: quay.io/ansiblegalaxy/galaxy:latest
     generation: null
     importPolicy: {}
     name: latest
