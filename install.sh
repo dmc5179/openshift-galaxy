@@ -1,5 +1,9 @@
 #!/bin/bash
 
+oc new-project galaxy
+oc project galaxy
+oc adm policy add-scc-to-user anyuid -z default
+
 # Create image streams
 oc apply -f galaxy-api-imagestream.yaml
 oc apply -f galaxy-celery-beat-imagestream.yaml
