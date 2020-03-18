@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose --provider openshift convert --file /home/ec2-user/workspace/galaxy/scripts/docker/release/compose.yml
+      --replicas 1 --volumes persistentVolumeClaim
+    kompose.version: 1.19.0 (f63a961c)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: galaxy-dev
+  name: galaxy-dev
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: galaxy-dev
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: galaxy-dev
+    spec:
+      containers:
+      - env:
+        - name: GALAXY_DB_URL
+          value: postgres://galaxy:galaxy@postgres:5432/galaxy
+        - name: GALAXY_INFLUX_DB_HOST
+          value: influx
+        - name: GALAXY_INFLUX_DB_PASSWORD
+          value: admin
+        - name: GALAXY_INFLUX_DB_PORT
+          value: "8086"
+        - name: GALAXY_INFLUX_DB_USERNAME
+          value: admin
+        - name: GALAXY_RABBITMQ_HOST
+          value: rabbitmq
+        - name: GALAXY_RABBITMQ_PASSWORD
+          value: galaxy
+        - name: GALAXY_SECRET_KEY
+          value: secret
+        image: ' '
+        name: galaxy-dev
+        ports:
+        - containerPort: 8000
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - galaxy-dev
+      from:
+        kind: ImageStreamTag
+        name: galaxy-dev:latest
+    type: ImageChange
+status: {}
