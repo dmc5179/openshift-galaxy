@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ImageStream
 metadata:
@@ -7,12 +8,12 @@ metadata:
   name: influxdb
 spec:
   tags:
-  - annotations: null
-    from:
-      kind: DockerImage
+    - annotations: null
+      from:
+        kind: DockerImage
       name: influxdb:latest
     generation: null
-    importPolicy: {}
+      importPolicy: {}
     name: latest
 status:
   dockerImageRepository: ""
