@@ -20,6 +20,9 @@ oc apply -f postgres-imagestream.yaml
 oc apply -f rabbitmq-imagestream.yaml
 oc apply -f redis-imagestream.yaml
 
+# Create Persistent Volume Claims
+oc apply -f postgres-pvc.yaml
+
 # Roll out initial services which do not depend
 # on other services
 oc apply -f redis-deploymentconfig.yaml
