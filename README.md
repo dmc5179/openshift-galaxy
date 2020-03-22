@@ -1,6 +1,13 @@
 # openshift-galaxy
 Ansible Galaxy on OpenShift
 
+
+The master branch does not work yet. The errors seen during install are noted below.
+Even if I hardcode the redis address I get to a djago migration issue.
+
+The Devel branch does work and deploy.
+
+
 This repository doesn't work yet. When running the galaxy pulp worker:
 
 oc logs -f galaxy-pulp-worker-1-zr4xk
